@@ -13,7 +13,7 @@ class svgMapWidgetAsset extends AssetBundle
     
     public $js = [
         'js/russia.js',
-        'js/map.js',
+        'js/svgMap.js',
     ];
 
     public $depends = [

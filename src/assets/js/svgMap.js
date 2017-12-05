@@ -1,4 +1,4 @@
-var svgMap = function(options){
+var svgMap = function(options) {
 
     var vars = {
         svg  : null,
@@ -56,9 +56,3 @@ var svgMap = function(options){
     this.construct(options);
 
 };
-
-// TODO: move to the view template
-var map = new svgMap({
-    svgId : 'mapSVG',
-    states: ruStates
-});
