@@ -1,4 +1,4 @@
-![SvgMap](https://ibb.co/bR6zSw "Yii2 widget for svg-map construction")
+![SvgMap](https://preview.ibb.co/mx5F0G/Screenshot_20171207_010228.png "Yii2 widget for svg-map construction")
 
 
 # SvgMap
