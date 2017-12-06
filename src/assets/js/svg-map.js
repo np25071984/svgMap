@@ -1,6 +1,7 @@
 var SvgMap = function(options) {
 
     var svg;
+    var type;
     var toolTip;
     var box = {
         x: 0,
@@ -15,21 +16,29 @@ var SvgMap = function(options) {
      * Constructor
      */
     this.construct = function(options){
-        if(typeof options.svgId === 'undefined') {
-            throw new Error('svgId parameter is missed');
+
+        ['id','type','data'].forEach(function (param) {
+            if(typeof options[param] === 'undefined') {
+                throw new Error(param + ' parameter is missed');
+            }
+        });
+
+        root.svg = $('#mapSVG'+options.id).get(0);
+        root.type = options.type;
+
+        var json = {};
+        if (root.type === 'json') {
+            json = options.data;
+        } else {
+            $.ajax({
+                url: options.data,
+                method: 'GET'
+            }).then(function(data) {
+                console.log(data);
+            });
         }
 
-        if(typeof options.states === 'undefined') {
-            throw new Error('states parameter is missed');
-        }
-
-        if(typeof options.toolTipId !== 'undefined') {
-            root.toolTip = $('#'+options.toolTipId);
-        }
-
-        root.svg = $('#'+options.svgId).get(0);
-
-        draw(root.svg, options.states);
+        draw(root.svg, json);
     };
 
     /*

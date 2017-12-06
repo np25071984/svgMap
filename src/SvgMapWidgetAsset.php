@@ -12,7 +12,6 @@ class SvgMapWidgetAsset extends AssetBundle
     ];
     
     public $js = [
-        'js/russia.js',
         'js/svg-map.js',
     ];
 

@@ -6,9 +6,9 @@
 <?php
 $this->registerJs("
     new SvgMap({
-        svgId : 'mapSVG". $id ."',
-        toolTipId: 'tooltip". $id ."',
-        states: ruStates
+        id : '". $id ."',
+        type: '". $type ."',
+        data: ". $data ."
     });
 ");
 ?>
