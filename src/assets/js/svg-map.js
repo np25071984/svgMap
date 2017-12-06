@@ -25,6 +25,7 @@ var SvgMap = function(options) {
 
         root.svg = $('#mapSVG'+options.id).get(0);
         root.type = options.type;
+        root.toolTip = $('#tooltip'+options.id).get(0);
 
         var json = {};
         if (root.type === 'json') {
@@ -38,40 +39,49 @@ var SvgMap = function(options) {
             });
         }
 
+        // TODO: validate json
         draw(root.svg, json);
     };
 
     /*
      * Draws the paths from array
      */
-    var draw = function(svg, states) {
-        $.each(states, function( index, value ) {
+    var draw = function(svg, data) {
+        $.each(data, function( index, value) {
             var path = document.createElementNS('http://www.w3.org/2000/svg',"path");
             path.setAttributeNS( null, "id", value.id);
             path.setAttributeNS( null, "d", value.d);
-            path.setAttributeNS( null, "name", value.name);
-            svg.appendChild(path);
+            path.setAttributeNS( null, "title", value.title);
+            path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseover", mouseOver);
             path.addEventListener("mouseout", mouseOut);
             path.addEventListener('click', mouseClick);
+            svg.appendChild(path);
         });
         adaptViewBox(svg);
     };
 
-    var mouseOver = function() {
-        console.log('mouseOver', $(this));
+    var mouseMove = function(e) {
+        root.toolTip.style.left = e.offsetX + 'px';
+        root.toolTip.style.bottom = e.offsetY + 'px';
+    }
+
+    var mouseOver = function(e) {
+        root.toolTip.style.visibility = "visible";
+        root.toolTip.innerHTML = createToolTipContext($(this));
     }
 
     var mouseOut = function() {
-        console.log('mouseOut', $(this));
+        root.toolTip.style.visibility = "hidden";
+        root.toolTip.innerHTML = $(this).attr('');
     }
 
     var mouseClick = function() {
-        console.log('pathClick', $(this).attr('name'));
+        alert($(this).attr('id') + '-' + $(this).attr('title'));
     }
 
-    var toolTip = function() {
-        console.log('tooltip');
+    var createToolTipContext = function(path) {
+        return path.attr('title');
     }
 
     /*

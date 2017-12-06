@@ -16,6 +16,7 @@ class SvgMapWidget extends Widget
         parent::init();
 
         if ($this->type === self::DATA_SOURCE_ARRAY) {
+            // TODO: check for 'id', 'title', 'd' keys
             $this->data = json_encode($this->data);
         }
     }
