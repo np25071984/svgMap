@@ -1,0 +1,23 @@
+{
+    "name": "ghopper/svg-map",
+    "description": "Yii2 widget for svg-map construction",
+    "type": "yii2-extension",
+    "keywords": ["yii2", "svg", "svg-map", "widget"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "GHopper",
+            "email": "np25071984@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/yii2": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ghopper\\svg-map\\": "src"
+        }
+    }
+
+}
