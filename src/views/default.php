@@ -9,6 +9,7 @@ $this->registerJs("
         id : '{$id}',
         type: '{$type}',
         data: {$data},
+        showTip:  {$showTip},
         onClick: {$onClick},
         onOver: {$onOver},
         onOut: {$onOut}

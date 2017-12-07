@@ -4,6 +4,8 @@ var SvgMap = function(options) {
     var type;
     var toolTip;
 
+    var showTip;
+
     var onClick;
     var onOver;
     var onOut;
@@ -31,6 +33,12 @@ var SvgMap = function(options) {
         root.svg = $('#mapSVG'+options.id).get(0);
         root.type = options.type;
         root.toolTip = $('#tooltip'+options.id).get(0);
+
+        if (options.showTip === false) {
+            root.showTip = false;
+        } else {
+            root.showTip = true;
+        }
 
         ['onClick','onOver','onOut'].forEach(function (param) {
             if (typeof options[param] === 'function') {
@@ -84,20 +92,23 @@ var SvgMap = function(options) {
     }
 
     var mouseOver = function(e) {
-        root.toolTip.style.visibility = "visible";
-        root.toolTip.innerHTML = createToolTipContext($(this));
+        if (root.showTip) {
+            root.toolTip.style.visibility = "visible";
+            root.toolTip.innerHTML = createToolTipContext($(this));
+        }
     }
 
     var mouseOut = function() {
-        root.toolTip.style.visibility = "hidden";
-        root.toolTip.innerHTML = $(this).attr('');
+        if (root.showTip) {
+            root.toolTip.style.visibility = "hidden";
+            root.toolTip.innerHTML = $(this).attr('');
+        }
     }
 
     var mouseClick = function() {
         if (root.onClick) {
             root.onClick($(this));
         }
-        //alert($(this).attr('id') + '-' + $(this).attr('title'));
     }
 
     var createToolTipContext = function(path) {
