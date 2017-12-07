@@ -3,6 +3,11 @@ var SvgMap = function(options) {
     var svg;
     var type;
     var toolTip;
+
+    var onClick;
+    var onOver;
+    var onOut;
+
     var box = {
         x: 0,
         y: 0,
@@ -26,6 +31,12 @@ var SvgMap = function(options) {
         root.svg = $('#mapSVG'+options.id).get(0);
         root.type = options.type;
         root.toolTip = $('#tooltip'+options.id).get(0);
+
+        ['onClick','onOver','onOut'].forEach(function (param) {
+            if (typeof options[param] === 'function') {
+                root[param] = options[param];
+            }
+        });
 
         var json = {};
         if (root.type === 'json') {
@@ -77,7 +88,10 @@ var SvgMap = function(options) {
     }
 
     var mouseClick = function() {
-        alert($(this).attr('id') + '-' + $(this).attr('title'));
+        if (root.onClick) {
+            root.onClick($(this));
+        }
+        //alert($(this).attr('id') + '-' + $(this).attr('title'));
     }
 
     var createToolTipContext = function(path) {

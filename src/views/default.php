@@ -8,7 +8,8 @@ $this->registerJs("
     new SvgMap({
         id : '". $id ."',
         type: '". $type ."',
-        data: ". $data ."
+        data: ". $data .",
+        onClick: function(e) {alert(e.attr('id') + ' - ' + e.attr('title'))}
     });
 ");
 ?>
