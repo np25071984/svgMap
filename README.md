@@ -6,7 +6,7 @@
 Yii2-виджет для генерации svg по заданному источнику данных.
 
 ## Установка
-Добавьте в composer.json
+Добавляем в composer.json
 ```json
 {
     "require": {
@@ -22,11 +22,13 @@ Yii2-виджет для генерации svg по заданному исто
 use \ghopper\svg-map\SvgMapWidget;
 ```
 
-### В контроллере получаем данные для построения svg (в данном случае из примера):
+### В контроллере получаем данные для построения svg (в данном случае из примера) и передаем в шаблон
 ```php
 $states = include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/russia.php";
+...
+$this->render('index', ['svgData' => $states]);
 ```
-### В шаблоне регистрируем js-обрыботчики событий в глобальном поле
+### В шаблоне создаем js-обрыботчики событий в глобальной зоне видимости
 ```javascript
 <script>
     var customClick = function(path) {alert(path.attr('id') + ' - ' + path.attr('title'))};
@@ -61,7 +63,7 @@ $states = include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/russia.ph
  * SvgMapWidget::DATA_SOURCE_JSON_URL - ссылка на json
 
 ## Внешний вид
-Дефолтные стили заложены `@vendor/ghopper/svg-map/assets/css/svg-map.css`, которые вы можете переопределять в своем коде как угодно. Сам виджет имеет простую структуру
+Дефолтные стили заложены `@vendor/ghopper/svg-map/assets/css/svg-map.css`, которые вы можете как угодно переопределять в своем коде. Сам виджет имеет простую структуру
 ```
 <div class='svg_map'>
     <div><!--tooltip--></div>
@@ -70,11 +72,9 @@ $states = include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/russia.ph
 ```
 Можете создавать сложную анимацию в обработчиках событий.
 
-## События
-Вы можете переопределить следующие события на svg-элементе path:
-
- * onClick
- * onOver
- * onOut
-
-В обработчик передается указатель на path-объект, из которого вы можете получить любые данные.
+## Параметры запуска виджета
+ * type - тип источника данных
+ * data - данные к параметру type (адрес json либо массив)
+ * onClick - callback-функция клика по элементу svg path
+ * onOver - callback-функция, вызываемая при движении курсора над элементом
+ * onOut - callback-функция, вызываемая когда курсор покидает элемент
