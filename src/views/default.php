@@ -6,10 +6,12 @@
 <?php
 $this->registerJs("
     new SvgMap({
-        id : '". $id ."',
-        type: '". $type ."',
-        data: ". $data .",
-        onClick: function(e) {alert(e.attr('id') + ' - ' + e.attr('title'))}
+        id : '{$id}',
+        type: '{$type}',
+        data: {$data},
+        onClick: {$onClick},
+        onOver: {$onOver},
+        onOut: {$onOut}
     });
 ");
 ?>

@@ -10,13 +10,15 @@ class SvgMapWidget extends Widget
 
     public $type;
     public $data;
+    public $onClick;
+    public $onOver;
+    public $onOut;
 
     public function init()
     {
         parent::init();
 
         if ($this->type === self::DATA_SOURCE_ARRAY) {
-            // TODO: check for 'id', 'title', 'd' keys
             $this->data = json_encode($this->data);
         }
     }
@@ -28,6 +30,9 @@ class SvgMapWidget extends Widget
             'id' => $this->getId(),
             'type' => ($this->type === self::DATA_SOURCE_ARRAY) ? 'json' : 'url',
             'data' => $this->data,
+            'onClick' =>  ($this->onClick) ? $this->onClick : 'null',
+            'onOver' =>  ($this->onOver) ? $this->onOver : 'null',
+            'onOut' =>  ($this->onOut) ? $this->onOut : 'null',
         ]);
     }
 }

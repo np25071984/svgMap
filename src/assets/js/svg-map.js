@@ -46,13 +46,19 @@ var SvgMap = function(options) {
                 url: options.data,
                 method: 'GET'
             }).then(function(data) {
-                console.log(data);
+                json = data;
             });
         }
 
-        // TODO: validate json
-        draw(root.svg, json);
+        if (validateJson(json)) {
+            draw(root.svg, json);
+        }
     };
+
+    var validateJson = function(json) {
+        // TODO: add validation for id, title and d keys
+        return true;
+    }
 
     /*
      * Draws the paths from array
@@ -60,9 +66,9 @@ var SvgMap = function(options) {
     var draw = function(svg, data) {
         $.each(data, function( index, value) {
             var path = document.createElementNS('http://www.w3.org/2000/svg',"path");
-            path.setAttributeNS( null, "id", value.id);
-            path.setAttributeNS( null, "d", value.d);
-            path.setAttributeNS( null, "title", value.title);
+            $.each(value, function( key, value) {
+                path.setAttributeNS( null, key, value);
+            });
             path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseover", mouseOver);
             path.addEventListener("mouseout", mouseOut);
