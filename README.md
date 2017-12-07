@@ -16,20 +16,31 @@ Yii2-виджет для генерации svg по заданному исто
 ```
 
 ## Пример использования
-Пространство имен:
+
+### Подключаем пространство имен
 ```php
-  use \ghopper\svg-map\SvgMapWidget;
+use \ghopper\svg-map\SvgMapWidget;
 ```
-В контроллере получаем данные для svg (в данном случае из примера):
+
+### В контроллере получаем данные для построения svg (в данном случае из примера):
 ```php
-  include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/states.php";
+$states = include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/russia.php";
 ```
-Теперь можно создавать виджет в любом шаблоне:
+### В шаблоне регистрируем js-обрыботчики событий в глобальном поле
+```javascript
+<script>
+    var customClick = function(path) {alert(path.attr('id') + ' - ' + path.attr('title'))};
+</script>
+```
+### И там же передаем все данные виджету
 ```php
-  echo SvgMapWidget::widget([
-      'type' => SvgMapWidget::DATA_SOURCE_ARRAY,
-      'data' => $svgData,
-  ]);
+<?php
+    echo SvgMapWidget::widget([
+        'type' => SvgMapWidget::DATA_SOURCE_ARRAY,
+        'data' => $svgData,
+        'onClick' => 'customClick',
+    ]);
+?>
 ```
 
 ## Источники данных
