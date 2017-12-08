@@ -102,6 +102,8 @@ var SvgMap = function(options) {
     var mouseOver = function(e) {
         if (root.showTip) {
             root.toolTip.style.visibility = "visible";
+            root.toolTip.style.opacity = ".9";
+            root.toolTip.style.transition = "opacity 0.3s linear";
             var toolText = createToolTipContext($(this));
             if (!toolText) {
                 toolText = "'title' isn't defined for this path";
@@ -116,6 +118,7 @@ var SvgMap = function(options) {
     var mouseOut = function() {
         if (root.showTip) {
             root.toolTip.style.visibility = "hidden";
+            root.toolTip.style.opacity = "0";
             root.toolTip.innerHTML = $(this).attr('');
         }
         if (root.onOut) {

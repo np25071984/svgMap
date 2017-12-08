@@ -25,14 +25,15 @@
 .svg_map DIV {
     visibility: hidden;
     position: absolute;
+    z-index: 1000;
+    font: 12px sans-serif;
     text-align: center;
+    font-weight: bold;
     padding: 10px;
     margin: 5px;
-    font: 12px sans-serif;
     background: lightgray;
     border: 1px solid grey;
     border-radius: 5px;
     pointer-events: none;
-    opacity: .9;
-    z-index: 1000;
+    opacity: 0;
 }
