@@ -64,8 +64,16 @@ var SvgMap = function(options) {
     };
 
     var validateJson = function(json) {
-        // TODO: add validation for id, title and d keys
-        return true;
+        /**
+         * Even only one valid 'd' element is enough
+         */
+        for (var key in json) {
+            if (typeof json[key]['d'] !== 'undefined') {
+                // TODO: path validation
+                return true;
+            }
+        };
+        return false;
     }
 
     /*
@@ -94,7 +102,14 @@ var SvgMap = function(options) {
     var mouseOver = function(e) {
         if (root.showTip) {
             root.toolTip.style.visibility = "visible";
-            root.toolTip.innerHTML = createToolTipContext($(this));
+            var toolText = createToolTipContext($(this));
+            if (!toolText) {
+                toolText = "'title' isn't defined for this path";
+            }
+            root.toolTip.innerHTML = toolText;
+        }
+        if (root.onOver) {
+            root.onOver($(this));
         }
     }
 
@@ -102,6 +117,9 @@ var SvgMap = function(options) {
         if (root.showTip) {
             root.toolTip.style.visibility = "hidden";
             root.toolTip.innerHTML = $(this).attr('');
+        }
+        if (root.onOut) {
+            root.onOut($(this));
         }
     }
 
@@ -112,7 +130,11 @@ var SvgMap = function(options) {
     }
 
     var createToolTipContext = function(path) {
-        return path.attr('title');
+        if (typeof path.attr('title') === 'undefined') {
+            return false;
+        } else {
+            return path.attr('title');
+        }
     }
 
     /*
