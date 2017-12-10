@@ -1,5 +1,5 @@
 {
-    "name": "dominus77/svgMap",
+    "name": "ghopper/svg-map",
     "description": "Yii2 widget for svg-map construction",
     "type": "yii2-extension",
     "keywords": ["yii2", "svg", "svg-map", "widget"],
@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "dominus77\\svgMap\\": ""
+            "ghopper\\svg-map\\": ""
         }
     }
 
