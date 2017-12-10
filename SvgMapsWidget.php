@@ -1,9 +1,14 @@
 <?php
-namespace ghopper\SvgMap;
+
+namespace ghopper\svgMap;
 
 use yii\base\Widget;
 
-class SvgMapWidget extends Widget
+/**
+ * Class SvgMapsWidget
+ * @package ghopper\svgMap
+ */
+class SvgMapsWidget extends Widget
 {
     const DATA_SOURCE_ARRAY = 1;
     const DATA_SOURCE_JSON_URL = 2;
@@ -48,7 +53,7 @@ class SvgMapWidget extends Widget
 
     public function run()
     {
-        SvgMapWidgetAsset::register($this->getView());
+        SvgMapsWidgetAsset::register($this->getView());
         return $this->render('default', [
             'id' => $this->getId(),
             'type' => ($this->type === self::DATA_SOURCE_ARRAY) ? 'json' : 'url',

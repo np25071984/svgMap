@@ -19,12 +19,12 @@ Yii2-виджет для генерации svg по заданному исто
 
 ### Подключаем пространство имен
 ```php
-use \ghopper\svg-map\SvgMapWidget;
+use ghopper\svgMap\SvgMapsWidget;
 ```
 
 ### В контроллере получаем данные для построения svg (в данном случае из примера) и передаем в шаблон
 ```php
-$states = include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/russia.php";
+$states = include Yii::getAlias('@ghopper/svgMap/example') . "/russia.php";
 ...
 $this->render('index', ['svgData' => $states]);
 ```
@@ -37,8 +37,8 @@ $this->render('index', ['svgData' => $states]);
 ### И там же передаем все данные виджету
 ```php
 <?php
-    echo SvgMapWidget::widget([
-        'type' => SvgMapWidget::DATA_SOURCE_ARRAY,
+    echo SvgMapsWidget::widget([
+        'type' => SvgMapsWidget::DATA_SOURCE_ARRAY,
         'data' => $svgData,
         'onClick' => 'customClick',
     ]);
@@ -58,11 +58,11 @@ $this->render('index', ['svgData' => $states]);
 Например добавить id, кол-во элементов, адрес перехода или другие данные,которые вам могут понадобиться. В последующем вы можете манипулировать этими данными в обработчиках событий.
 
 Виджет поддерживает два источника данных:
- * SvgMapWidget::DATA_SOURCE_ARRAY - php-массив
- * SvgMapWidget::DATA_SOURCE_JSON_URL - ссылка на json
+ * SvgMapsWidget::DATA_SOURCE_ARRAY - php-массив
+ * SvgMapsWidget::DATA_SOURCE_JSON_URL - ссылка на json
 
 ## Внешний вид
-Дефолтные стили заложены `@vendor/ghopper/svg-map/assets/css/svg-map.css`, которые вы можете как угодно переопределять в своем коде. Сам виджет имеет простую структуру
+Дефолтные стили заложены `@vendor/ghopper/svgMap/src/css/svg-map.css`, которые вы можете как угодно переопределять в своем коде. Сам виджет имеет простую структуру
 ```
 <div class='svg_map'>
     <div><!--tooltip--></div>
