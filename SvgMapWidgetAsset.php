@@ -1,14 +1,14 @@
 <?php
 
-namespace ghopper\svgMap;
+namespace ghopper\svgmap;
 
 use yii\web\AssetBundle;
 
 /**
- * Class SvgMapsWidgetAsset
- * @package ghopper\svgMap
+ * Class SvgMapWidgetAsset
+ * @package ghopper\svgmap
  */
-class SvgMapsWidgetAsset extends AssetBundle
+class SvgMapWidgetAsset extends AssetBundle
 {
     public $sourcePath;
 
