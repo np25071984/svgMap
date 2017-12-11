@@ -10,12 +10,7 @@ var SvgMap = function(options) {
     var onOver;
     var onOut;
 
-    var box = {
-        x: 0,
-        y: 0,
-        height: 0,
-        width: 0
-    };
+    var box;
 
     var root = this;
 
@@ -91,8 +86,91 @@ var SvgMap = function(options) {
             path.addEventListener('click', mouseClick);
             svg.appendChild(path);
         });
+        svg.addEventListener("wheel", mouseWheel);
+
+        $('DIV#tools > DIV').get(0).addEventListener('click', zoomIn);
+        $('DIV#tools > DIV').get(1).addEventListener('click', zoomReset);
+        $('DIV#tools > DIV').get(2).addEventListener('click', zoomOut);
+
         adaptViewBox(svg);
     };
+
+    var zoomIn = function () {
+        var box = root.box;
+        var dS = (box.width + box.height)/2 * 0.05;
+        box.x = box.x + dS;
+        box.width = box.width - dS  * 2;
+        box.y = box.y + dS;
+        box.height = box.height - dS * 2;
+        if (box.width < 0) {
+            return false;
+        }
+        if (box.height < 0) {
+            return false;
+        }
+        root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
+    };
+
+    var zoomReset = function () {
+        adaptViewBox(root.svg);
+    };
+
+    var zoomOut = function () {
+        var box = root.box;
+        var dS = (box.width + box.height)/2 * 0.05;
+        box.x = box.x - dS;
+        box.width = box.width + dS * 2;
+        box.y = box.y - dS;
+        box.height = box.height + dS * 2;
+        if (box.width < 0) {
+            return false;
+        }
+        if (box.height < 0) {
+            return false;
+        }
+        root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
+    };
+
+    var mouseWheel = function (e) {
+        e.preventDefault();
+
+        // TODO: is box an alias to root.box?
+        var box = root.box;
+        var parentDivBox = root.svg.parentNode.getBoundingClientRect();
+        var xShift = 0;
+        var уShift = 0;
+        if (parentDivBox.width/2 > e.layerX) {
+            xShift = -100;
+        } else {
+            xShift = 100;
+        }
+
+        if (parentDivBox.hieght/2 > e.layerY) {
+            yShift = 100;
+        } else {
+            yShift = -100;
+        }
+
+        var dS = (box.width + box.height)/2 * 0.05;
+        if (e.deltaY > 0) {
+            box.x = box.x + dS + xShift;
+            box.width = box.width - dS  * 2;
+            box.y = box.y + dS + yShift;
+            box.height = box.height - dS * 2;
+        } else {
+            box.x = box.x - dS - xShift;
+            box.width = box.width + dS * 2;
+            box.y = box.y - dS - yShift;
+            box.height = box.height + dS * 2;
+        }
+        if (box.width < 0) {
+            return false;
+        }
+        if (box.height < 0) {
+            return false;
+        }
+        root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
+    }
 
     var mouseMove = function(e) {
         root.toolTip.style.left = e.offsetX + 'px';
