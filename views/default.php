@@ -22,6 +22,7 @@ $this->registerJs(new JsExpression("
     });
 "), \yii\web\View::POS_READY);
 ?>
+
 <div class="svg_map">
     <div id="tooltip<?= $id ?>"></div>
     <svg id="mapSVG<?= $id ?>" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
