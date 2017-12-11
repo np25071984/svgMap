@@ -139,19 +139,21 @@ var SvgMap = function(options) {
         var parentDivBox = root.svg.parentNode.getBoundingClientRect();
         var xShift = 0;
         var уShift = 0;
-        if (parentDivBox.width/2 > e.layerX) {
-            xShift = -100;
-        } else {
-            xShift = 100;
-        }
-
-        if (parentDivBox.hieght/2 > e.layerY) {
-            yShift = 100;
-        } else {
-            yShift = -100;
-        }
-
         var dS = (box.width + box.height)/2 * 0.05;
+
+        if (parentDivBox.width/2 > e.layerX) {
+            xShift = -1 * dS;
+        } else {
+            xShift = 1 * dS;
+        }
+
+        if (parentDivBox.height/2 > e.layerY) {
+            yShift = 1 * dS;
+        } else {
+            yShift = -1 * dS;
+        }
+
+
         if (e.deltaY > 0) {
             box.x = box.x + dS + xShift;
             box.width = box.width - dS  * 2;
