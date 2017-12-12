@@ -1,8 +1,13 @@
 <?php
-namespace ghopper\SvgMap;
+
+namespace ghopper\svgmap;
 
 use yii\web\AssetBundle;
 
+/**
+ * Class SvgMapWidgetAsset
+ * @package ghopper\svgmap
+ */
 class SvgMapWidgetAsset extends AssetBundle
 {
     public $sourcePath;
@@ -10,7 +15,7 @@ class SvgMapWidgetAsset extends AssetBundle
     public $css = [
         'css/svg-map.css'
     ];
-    
+
     public $js = [
         'js/svg-map.js',
     ];
@@ -21,8 +26,7 @@ class SvgMapWidgetAsset extends AssetBundle
 
     public function init()
     {
-        $this->sourcePath = '@vendor/ghopper/svg-map/src/assets';
-
         parent::init();
+        $this->sourcePath = __DIR__ . '/src';
     }
 }

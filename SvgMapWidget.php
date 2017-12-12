@@ -1,8 +1,13 @@
 <?php
-namespace ghopper\SvgMap;
+
+namespace ghopper\svgmap;
 
 use yii\base\Widget;
 
+/**
+ * Class SvgMapWidget
+ * @package ghopper\svgmap
+ */
 class SvgMapWidget extends Widget
 {
     const DATA_SOURCE_ARRAY = 1;
