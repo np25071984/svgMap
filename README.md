@@ -58,8 +58,8 @@ $this->render('index', ['svgData' => $states]);
 Например добавить id, кол-во элементов, адрес перехода или другие данные,которые вам могут понадобиться. В последующем вы можете манипулировать этими данными в обработчиках событий.
 
 Виджет поддерживает два источника данных:
- * SvgMapsWidget::DATA_SOURCE_ARRAY - php-массив
- * SvgMapsWidget::DATA_SOURCE_JSON_URL - ссылка на json
+ * SvgMapWidget::DATA_SOURCE_ARRAY - php-массив
+ * SvgMapWidget::DATA_SOURCE_JSON_URL - ссылка на json
 
 ## Внешний вид
 Дефолтные стили заложены `@vendor/ghopper/svg-map/src/css/svg-map.css`, которые вы можете как угодно переопределять в своем коде. Сам виджет имеет простую структуру
