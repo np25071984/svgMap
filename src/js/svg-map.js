@@ -2,7 +2,7 @@ var SvgMap = function (options) {
 
     var svg;
     var type;
-    var toolTip;
+    var toolTip = true;
 
     var showTip;
 
@@ -11,6 +11,7 @@ var SvgMap = function (options) {
     var onOut;
 
     var box;
+    var drag = false;
 
     var root = this;
 
@@ -83,7 +84,9 @@ var SvgMap = function (options) {
             path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseover", mouseOver);
             path.addEventListener("mouseout", mouseOut);
-            path.addEventListener('click', mouseClick);
+            path.addEventListener("mousedown", mouseDown);
+            path.addEventListener("mouseup", mouseUp);
+            // path.addEventListener('click', mouseClick);
             svg.appendChild(path);
         });
         svg.addEventListener("wheel", mouseWheel);
@@ -94,6 +97,16 @@ var SvgMap = function (options) {
 
         adaptViewBox(svg);
     };
+
+    var mouseDown = function () {
+        console.log('down');
+        root.drag = true;
+    }
+
+    var mouseUp = function () {
+        root.drag = false;
+        root.toolTip.style.visibility = 'visible';
+    }
 
     var zoomIn = function () {
         var box = root.box;
@@ -175,6 +188,14 @@ var SvgMap = function (options) {
     }
 
     var mouseMove = function (e) {
+        if (root.drag) {
+            root.toolTip.style.visibility = 'hidden';
+            var box = root.box;
+            box.x = box.x - e.movementX * 10;
+            box.y = box.y + e.movementY * 10;
+            root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
+        }
+
         root.toolTip.style.left = e.offsetX + 'px';
         root.toolTip.style.bottom = e.offsetY + 'px';
     };
