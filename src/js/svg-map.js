@@ -1,4 +1,4 @@
-var SvgMap = function(options) {
+var SvgMap = function (options) {
 
     var svg;
     var type;
@@ -17,17 +17,17 @@ var SvgMap = function(options) {
     /*
      * Constructor
      */
-    this.construct = function(options){
+    this.construct = function (options) {
 
-        ['id','type','data'].forEach(function (param) {
-            if(typeof options[param] === 'undefined') {
+        ['id', 'type', 'data'].forEach(function (param) {
+            if (typeof options[param] === 'undefined') {
                 throw new Error(param + ' parameter is missed');
             }
         });
 
-        root.svg = $('#mapSVG'+options.id).get(0);
+        root.svg = $('#mapSVG' + options.id).get(0);
         root.type = options.type;
-        root.toolTip = $('#tooltip'+options.id).get(0);
+        root.toolTip = $('#tooltip' + options.id).get(0);
 
         if (options.showTip === false) {
             root.showTip = false;
@@ -35,7 +35,7 @@ var SvgMap = function(options) {
             root.showTip = true;
         }
 
-        ['onClick','onOver','onOut'].forEach(function (param) {
+        ['onClick', 'onOver', 'onOut'].forEach(function (param) {
             if (typeof options[param] === 'function') {
                 root[param] = options[param];
             }
@@ -48,7 +48,7 @@ var SvgMap = function(options) {
             $.ajax({
                 url: options.data,
                 method: 'GET'
-            }).then(function(data) {
+            }).then(function (data) {
                 json = data;
             });
         }
@@ -58,7 +58,7 @@ var SvgMap = function(options) {
         }
     };
 
-    var validateJson = function(json) {
+    var validateJson = function (json) {
         /**
          * Even only one valid 'd' element is enough
          */
@@ -67,18 +67,18 @@ var SvgMap = function(options) {
                 // TODO: path validation
                 return true;
             }
-        };
+        }
         return false;
-    }
+    };
 
     /*
      * Draws the paths from array
      */
-    var draw = function(svg, data) {
-        $.each(data, function( index, value) {
-            var path = document.createElementNS('http://www.w3.org/2000/svg',"path");
-            $.each(value, function( key, value) {
-                path.setAttributeNS( null, key, value);
+    var draw = function (svg, data) {
+        $.each(data, function (index, value) {
+            var path = document.createElementNS('http://www.w3.org/2000/svg', "path");
+            $.each(value, function (key, value) {
+                path.setAttributeNS(null, key, value);
             });
             path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseover", mouseOver);
@@ -174,12 +174,12 @@ var SvgMap = function(options) {
         root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
     }
 
-    var mouseMove = function(e) {
+    var mouseMove = function (e) {
         root.toolTip.style.left = e.offsetX + 'px';
         root.toolTip.style.bottom = e.offsetY + 'px';
-    }
+    };
 
-    var mouseOver = function(e) {
+    var mouseOver = function (e) {
         if (root.showTip) {
             root.toolTip.style.visibility = "visible";
             root.toolTip.style.opacity = ".9";
@@ -193,9 +193,9 @@ var SvgMap = function(options) {
         if (root.onOver) {
             root.onOver($(this));
         }
-    }
+    };
 
-    var mouseOut = function() {
+    var mouseOut = function () {
         if (root.showTip) {
             root.toolTip.style.visibility = "hidden";
             root.toolTip.style.opacity = "0";
@@ -204,32 +204,32 @@ var SvgMap = function(options) {
         if (root.onOut) {
             root.onOut($(this));
         }
-    }
+    };
 
-    var mouseClick = function() {
+    var mouseClick = function () {
         if (root.onClick) {
             root.onClick($(this));
         }
-    }
+    };
 
-    var createToolTipContext = function(path) {
+    var createToolTipContext = function (path) {
         if (typeof path.attr('title') === 'undefined') {
             return false;
         } else {
             return path.attr('title');
         }
-    }
+    };
 
     /*
      * Adapts dimension of SVG according it paths
      */
-    var adaptViewBox = function(svg) {
+    var adaptViewBox = function (svg) {
         root.box = svg.getBBox();
 
         // TODO: why svg is turned upside down?!
         svg.setAttribute('transform', 'scale(1, -1)');
 
-        svg.setAttribute('viewBox', root.box.x+' '+root.box.y+' '+root.box.width+' '+root.box.height);
+        svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
     };
 
     /*

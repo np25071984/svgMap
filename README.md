@@ -19,12 +19,12 @@ Yii2-виджет для генерации svg по заданному исто
 
 ### Подключаем пространство имен
 ```php
-use \ghopper\svg-map\SvgMapWidget;
+use ghopper\svgmap\SvgMapWidget;
 ```
 
 ### В контроллере получаем данные для построения svg (в данном случае из примера) и передаем в шаблон
 ```php
-$states = include Yii::getAlias('@vendor/ghopper/svg-map/example') . "/russia.php";
+$states = include Yii::getAlias('@ghopper/svgmap/example') . "/russia.php";
 ...
 $this->render('index', ['svgData' => $states]);
 ```
@@ -62,7 +62,7 @@ $this->render('index', ['svgData' => $states]);
  * SvgMapWidget::DATA_SOURCE_JSON_URL - ссылка на json
 
 ## Внешний вид
-Дефолтные стили заложены `@vendor/ghopper/svg-map/assets/css/svg-map.css`, которые вы можете как угодно переопределять в своем коде. Сам виджет имеет простую структуру
+Дефолтные стили заложены `@vendor/ghopper/svg-map/src/css/svg-map.css`, которые вы можете как угодно переопределять в своем коде. Сам виджет имеет простую структуру
 ```
 <div class='svg_map'>
     <div><!--tooltip--></div>
