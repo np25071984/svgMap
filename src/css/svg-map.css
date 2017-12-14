@@ -39,6 +39,7 @@
 }
 
 .tools {
+    visibility: hidden;
     opacity: .94;
     position: absolute;
     font: 1.1em sans-serif;

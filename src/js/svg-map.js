@@ -1,22 +1,33 @@
 var SvgMap = function (options) {
 
+    /**
+     * @var int Svg state constants
+     */
     const STATE_INITIAL = 1;
     const STATE_CLICK = 2;
     const STATE_DRAG = 3;
 
+    /**
+     * Main element handlers
+     */
     var svg;
-    var type;
     var toolTip;
+    var tools;
+
+    var type;
+    var state;
 
     var showTip;
+    var showTools;
 
+    /**
+     * Event handlers
+     */
     var onClick;
     var onOver;
     var onOut;
 
     var box;
-
-    var state;
 
     var root = this;
 
@@ -27,22 +38,48 @@ var SvgMap = function (options) {
      */
     this.construct = function (options) {
 
+        /**
+         * Check for mandatory options
+         */
         ['id', 'type', 'data'].forEach(function (param) {
             if (typeof options[param] === 'undefined') {
                 throw new Error(param + ' parameter is missed');
             }
         });
 
-        root.svg = $('#mapSVG_' + options.id).get(0);
-        root.type = options.type;
+        /**
+         * Set main handlers
+         */
+        root.svg = $('#map_' + options.id).get(0);
         root.toolTip = $('#tooltip_' + options.id).get(0);
+        root.tools = $('#tools_' + options.id).get(0);
 
+        /**
+         * The data provider type
+         */
+        root.type = options.type;
+
+        /**
+         * Show tooltip
+         */
         if (options.showTip === false) {
             root.showTip = false;
         } else {
             root.showTip = true;
         }
 
+        /**
+         * Show tools panel
+         */
+        if (options.showTools === false) {
+            root.showTools = false;
+        } else {
+            root.showTools = true;
+        }
+
+        /**
+         * Check for event handlers
+         */
         ['onClick', 'onOver', 'onOut'].forEach(function (param) {
             if (typeof options[param] === 'function') {
                 root[param] = options[param];
@@ -59,6 +96,18 @@ var SvgMap = function (options) {
             }).then(function (data) {
                 json = data;
             });
+        }
+
+        /**
+         * Set up tools panel
+         */
+        if (root.showTools) {
+            root.tools.style.visibility = 'visible';
+
+            var tools = root.tools.getElementsByTagName('div');
+            tools[0].addEventListener('click', zoomIn);
+            tools[1].addEventListener('click', zoomReset);
+            tools[2].addEventListener('click', zoomOut);
         }
 
         if (validateJson(json)) {
@@ -88,23 +137,21 @@ var SvgMap = function (options) {
             $.each(value, function (key, value) {
                 path.setAttributeNS(null, key, value);
             });
-            path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseover", mouseOver);
+            path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseout", mouseOut);
             path.addEventListener("mousedown", mouseDown);
             path.addEventListener("mouseup", mouseUp);
             svg.appendChild(path);
         });
-        svg.addEventListener("wheel", mouseWheel);
-
-        $('.tools > DIV').get(0).addEventListener('click', zoomIn);
-        $('.tools > DIV').get(1).addEventListener('click', zoomReset);
-        $('.tools > DIV').get(2).addEventListener('click', zoomOut);
+        if (root.showTools) {
+            svg.addEventListener("wheel", mouseWheel);
+        }
 
         adaptViewBox(svg);
     };
 
-    var mouseDown = function () {
+    var mouseDown = function (e) {
         root.state = STATE_CLICK;
     }
 
@@ -129,11 +176,16 @@ var SvgMap = function (options) {
                 root.state = STATE_DRAG;
             case STATE_DRAG:
                 root.toolTip.style.visibility = 'hidden';
-                var box = root.box;
-                box.x = box.x - e.movementX * 10;
-                box.y = box.y + e.movementY * 10;
-                root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-                root.mapShifted = true;
+
+                /*
+                 * TODO: svg move speed = cursor speed. Why do I need 15 coefficient
+                 */
+                if (root.showTools) {
+                    var box = root.box;
+                    box.x = box.x - e.movementX * 15;
+                    box.y = box.y + e.movementY * 15;
+                    root.svg.setAttribute('viewBox', box.x + ' ' + box.y + ' ' + box.width + ' ' + box.height);
+                }
                 break;
         }
     };
@@ -195,7 +247,6 @@ var SvgMap = function (options) {
         } else {
             yShift = -1 * dS;
         }
-
 
         if (e.deltaY > 0) {
             box.x = box.x + dS + xShift;

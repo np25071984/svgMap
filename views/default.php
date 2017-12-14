@@ -17,6 +17,7 @@ $this->registerJs(new JsExpression("
         type: '{$type}',
         data: {$data},
         showTip:  {$showTip},
+        showTools:  {$showTools},
         onClick: {$onClick},
         onOver: {$onOver},
         onOut: {$onOut}
@@ -26,8 +27,8 @@ $this->registerJs(new JsExpression("
 
 <div class="svg_map">
     <div id="tooltip_<?= $id ?>" class="tooltip"></div>
-    <svg id="mapSVG_<?= $id ?>" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" />
-    <div class="tools">
+    <svg id="map_<?= $id ?>" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" />
+    <div id="tools_<?= $id ?>" class="tools">
         <div><i class="glyphicon glyphicon-zoom-in"></i></div>
         <div><i class="glyphicon glyphicon-fullscreen"></i></div>
         <div><i class="glyphicon glyphicon-zoom-out"></i></div>

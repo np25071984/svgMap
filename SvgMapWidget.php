@@ -14,7 +14,7 @@ class SvgMapWidget extends Widget
     const DATA_SOURCE_JSON_URL = 2;
 
     /**
-     * @var int data provider type
+     * @var int Data provider type
      */
     public $type;
 
@@ -24,12 +24,18 @@ class SvgMapWidget extends Widget
     public $data;
 
     /**
-     * @var bool ToolTip show flag
+     * @var bool Tooltip show flag
      */
     public $showTip;
 
     /**
-     * @var string callback function for event handler
+     * @var bool Tools panel show flag
+     */
+    public $showTools;
+
+
+    /**
+     * @var string Callback functions for events handler
      */
     public $onClick;
     public $onOver;
@@ -44,10 +50,17 @@ class SvgMapWidget extends Widget
         }
 
         /**
-         * Show toolTip by default
+         * Show tooltip by default
          */
         if (!isset($this->showTip)) {
             $this->showTip = true;
+        }
+
+        /**
+         * Hide tools by default
+         */
+        if (!isset($this->showTools)) {
+            $this->showTools = false;
         }
     }
 
@@ -59,6 +72,7 @@ class SvgMapWidget extends Widget
             'type' => ($this->type === self::DATA_SOURCE_ARRAY) ? 'json' : 'url',
             'data' => $this->data,
             'showTip' => ($this->showTip) ? 'true' : 'false',
+            'showTools' => ($this->showTools) ? 'true' : 'false',
             'onClick' =>  ($this->onClick) ? $this->onClick : 'null',
             'onOver' =>  ($this->onOver) ? $this->onOver : 'null',
             'onOut' =>  ($this->onOut) ? $this->onOut : 'null',
