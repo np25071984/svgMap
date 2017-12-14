@@ -99,7 +99,12 @@ var SvgMap = function (options) {
     };
 
     var mouseMove = function (e) {
-        toolTip.css({left: e.pageX - toolTipOptions.position.x, top: e.pageY - toolTipOptions.position.y});
+        var pos = this.getBoundingClientRect();
+
+        var left = pos.left - toolTipOptions.position.x;
+        var top = pos.top - toolTipOptions.position.y;
+
+        toolTip.css({display: 'block', left: left + 'px', top: top + 'px'});
     };
 
     var mouseOver = function (e) {
