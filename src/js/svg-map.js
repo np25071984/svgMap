@@ -3,6 +3,7 @@ var SvgMap = function (options) {
     var svg;
     var type;
     var toolTip;
+    var toolTipOptions;
 
     var showTip;
 
@@ -29,10 +30,13 @@ var SvgMap = function (options) {
                 throw new Error(param + ' parameter is missed');
             }
         });
-
-        root.svg = $('#mapSVG' + options.id).get(0);
+        root.svg = $('#' + options.svgId).get(0);
         root.type = options.type;
-        root.toolTip = $('#tooltip' + options.id).get(0);
+
+        toolTipOptions = options.toolTipOptions;
+        toolTip = $('#' + toolTipOptions.id);
+
+        root.toolTip = toolTip.get(0);
 
         if (options.showTip === false) {
             root.showTip = false;
@@ -95,8 +99,7 @@ var SvgMap = function (options) {
     };
 
     var mouseMove = function (e) {
-        root.toolTip.style.left = e.offsetX + 'px';
-        root.toolTip.style.bottom = e.offsetY + 'px';
+        toolTip.css({left: e.pageX - toolTipOptions.position.x, top: e.pageY - toolTipOptions.position.y});
     };
 
     var mouseOver = function (e) {
@@ -146,9 +149,6 @@ var SvgMap = function (options) {
     var adaptViewBox = function (svg) {
         root.box = svg.getBBox();
 
-        // TODO: why svg is turned upside down?!
-        svg.setAttribute('transform', 'scale(1, -1)');
-
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
     };
 
@@ -156,6 +156,4 @@ var SvgMap = function (options) {
      * Pass options when class instantiated
      */
     this.construct(options);
-
 };
-
