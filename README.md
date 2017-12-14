@@ -6,9 +6,10 @@
 Yii2-виджет для генерации svg по заданному источнику данных.
 
 ## Установка
+
 Выполняем команду
 ```
-php composer.phar require 
+php composer.phar require hopper/svg-map "*"
 ```
 или добавляем в composer.json
 ```json
