@@ -65,6 +65,8 @@ class SvgMapWidget extends Widget
     public $onOver;
     public $onOut;
 
+    private $toolsId;
+
     public function init()
     {
         parent::init();
@@ -72,6 +74,7 @@ class SvgMapWidget extends Widget
         $this->id = $this->id ?: $this->getId();
         $tooltipId = 'tooltip_' . $this->id;
         $svgId = 'mapSVG_' . $this->id;
+        $toolsId = 'tools_' . $this->id;
 
         $this->onClick = ($this->onClick) ? $this->onClick : 'null';
         $this->onOver = ($this->onOver) ? $this->onOver : 'null';
@@ -86,6 +89,7 @@ class SvgMapWidget extends Widget
         // Html опции для контейнера toolTip
         $this->toolTipContainerOptions = ArrayHelper::merge([
             'id' => $tooltipId,
+            'class' => 'svg_map_tooltip',
         ], $this->toolTipContainerOptions);
         $this->toolTipContainerOptions['id'] = $this->toolTipContainerOptions['id'] ?: $tooltipId;
 
@@ -113,6 +117,7 @@ class SvgMapWidget extends Widget
     {
         $this->registerAssets();
         echo Html::beginTag('div', $this->containerOptions) . PHP_EOL;
+        echo $this->render('_zoom2', ['id' => $this->toolsId]) . PHP_EOL;
         echo Html::tag('div', '', $this->toolTipContainerOptions) . PHP_EOL;
         echo Html::tag('svg', '', $this->svgContainerOptions) . PHP_EOL;
         echo Html::endTag('div') . PHP_EOL;
