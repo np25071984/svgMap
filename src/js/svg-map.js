@@ -1,5 +1,9 @@
 var SvgMap = function (options) {
 
+    const STATE_INITIAL = 1;
+    const STATE_CLICK = 2;
+    const STATE_DRAG = 3;
+
     var svg;
     var type;
     var toolTip = true;
@@ -11,12 +15,8 @@ var SvgMap = function (options) {
     var onOut;
 
     var box;
-    var drag = false;
 
-    /**
-     * @var bool Is it a drag or just a click
-     */
-    var click;
+    var state;
 
     var root = this;
 
@@ -61,6 +61,7 @@ var SvgMap = function (options) {
             });
         }
 
+        root.state = STATE_INITIAL;
         if (validateJson(json)) {
             draw(root.svg, json);
         }
@@ -106,32 +107,36 @@ var SvgMap = function (options) {
     };
 
     var mouseDown = function () {
-        root.drag = true;
-        root.click = true;
+        root.state = STATE_CLICK;
     }
 
-    var mouseUp = function (e) {
-        root.drag = false;
-        if (root.click) {
+    var mouseUp = function () {
+        if (root.state == STATE_CLICK) {
             if (root.onClick) {
                 root.onClick($(this));
             }
         }
+
+        root.state = STATE_INITIAL;
         root.toolTip.style.visibility = 'visible';
     }
 
     var mouseMove = function (e) {
-        if (root.drag) {
-            root.click = false;
-            root.toolTip.style.visibility = 'hidden';
-            var box = root.box;
-            box.x = box.x - e.movementX * 10;
-            box.y = box.y + e.movementY * 10;
-            root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-            root.mapShifted = true;
-        } else {
-            root.toolTip.style.left = e.offsetX + 'px';
-            root.toolTip.style.bottom = e.offsetY + 'px';
+        switch(root.state) {
+            case STATE_INITIAL:
+                root.toolTip.style.left = e.offsetX + 'px';
+                root.toolTip.style.bottom = e.offsetY + 'px';
+                break;
+            case STATE_CLICK:
+                root.state = STATE_DRAG;
+            case STATE_DRAG:
+                root.toolTip.style.visibility = 'hidden';
+                var box = root.box;
+                box.x = box.x - e.movementX * 10;
+                box.y = box.y + e.movementY * 10;
+                root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
+                root.mapShifted = true;
+                break;
         }
     };
 
