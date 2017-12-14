@@ -13,10 +13,17 @@ var SvgMap = function (options) {
     var box;
     var drag = false;
 
+    /**
+     * @var bool Is it a drag or just a click
+     */
+    var click;
+
     var root = this;
 
-    /*
+    /**
      * Constructor
+     *
+     * @param array
      */
     this.construct = function (options) {
 
@@ -99,14 +106,34 @@ var SvgMap = function (options) {
     };
 
     var mouseDown = function () {
-        console.log('down');
         root.drag = true;
+        root.click = true;
     }
 
-    var mouseUp = function () {
+    var mouseUp = function (e) {
         root.drag = false;
+        if (root.click) {
+            if (root.onClick) {
+                root.onClick($(this));
+            }
+        }
         root.toolTip.style.visibility = 'visible';
     }
+
+    var mouseMove = function (e) {
+        if (root.drag) {
+            root.click = false;
+            root.toolTip.style.visibility = 'hidden';
+            var box = root.box;
+            box.x = box.x - e.movementX * 10;
+            box.y = box.y + e.movementY * 10;
+            root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
+            root.mapShifted = true;
+        } else {
+            root.toolTip.style.left = e.offsetX + 'px';
+            root.toolTip.style.bottom = e.offsetY + 'px';
+        }
+    };
 
     var zoomIn = function () {
         var box = root.box;
@@ -187,19 +214,6 @@ var SvgMap = function (options) {
         root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
     }
 
-    var mouseMove = function (e) {
-        if (root.drag) {
-            root.toolTip.style.visibility = 'hidden';
-            var box = root.box;
-            box.x = box.x - e.movementX * 10;
-            box.y = box.y + e.movementY * 10;
-            root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-        }
-
-        root.toolTip.style.left = e.offsetX + 'px';
-        root.toolTip.style.bottom = e.offsetY + 'px';
-    };
-
     var mouseOver = function (e) {
         if (root.showTip) {
             root.toolTip.style.visibility = "visible";
@@ -224,12 +238,6 @@ var SvgMap = function (options) {
         }
         if (root.onOut) {
             root.onOut($(this));
-        }
-    };
-
-    var mouseClick = function () {
-        if (root.onClick) {
-            root.onClick($(this));
         }
     };
 
