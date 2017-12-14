@@ -35,7 +35,7 @@ class SvgMapWidget extends Widget
 
     /**
      * Options ToolTip
-     * ['position' => ['x' => 100, 'y' => 210]],
+     * ['position' => ['x' => 80, 'y' => 120]],
      * @var array
      */
     public $toolTipOptions = [];
@@ -97,7 +97,7 @@ class SvgMapWidget extends Widget
         // по умолчанию заданы параметры [position => ['x' => 100, 'y' => 210]]
         $this->toolTipOptions = json_encode(ArrayHelper::merge([
             'id' => $this->toolTipContainerOptions['id'],
-            'position' => ['x' => 100, 'y' => 210],
+            'position' => ['x' => 80, 'y' => 120],
         ], $this->toolTipOptions));
 
         // Html заголовки и опции для тега svg
