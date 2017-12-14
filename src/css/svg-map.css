@@ -10,19 +10,19 @@
     height: 100%;
 }
 
-.svg_map path {
+.svg_map svg path {
     fill: white;
     stroke-width: .2%;
     stroke: black;
     opacity: 1;
 }
 
-.svg_map path:hover {
+.svg_map svg path:hover {
     fill: gray;
     stroke-width: .5%;
 }
 
-.tooltip {
+.svg_map .tooltip {
     visibility: hidden;
     position: absolute;
     z-index: 1000;
@@ -36,22 +36,4 @@
     border-radius: 5px;
     pointer-events: none;
     opacity: 0;
-}
-
-.tools {
-    visibility: hidden;
-    opacity: .94;
-    position: absolute;
-    font: 1.1em sans-serif;
-    padding: 10px;
-    margin: 5px;
-    background: lightgray;
-    border: 1px solid grey;
-    border-radius: 5px;
-    display: inline-block;
-}
-
-.tools > DIV:hover {
-    opacity: 1;
-    font: 1.2em sans-serif;
 }

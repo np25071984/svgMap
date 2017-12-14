@@ -1,85 +1,49 @@
 var SvgMap = function (options) {
 
-    /**
-     * @var int Svg state constants
-     */
-    const STATE_INITIAL = 1;
-    const STATE_CLICK = 2;
-    const STATE_DRAG = 3;
-
-    /**
-     * Main element handlers
-     */
     var svg;
-    var toolTip;
-    var tools;
-
     var type;
-    var state;
+    var toolTip;
+    var toolTipOptions;
 
     var showTip;
-    var showTools;
 
-    /**
-     * Event handlers
-     */
     var onClick;
     var onOver;
     var onOut;
 
-    var box;
+    var box = {
+        x: 0,
+        y: 0,
+        height: 0,
+        width: 0
+    };
 
     var root = this;
 
-    /**
+    /*
      * Constructor
-     *
-     * @param array
      */
     this.construct = function (options) {
 
-        /**
-         * Check for mandatory options
-         */
         ['id', 'type', 'data'].forEach(function (param) {
             if (typeof options[param] === 'undefined') {
                 throw new Error(param + ' parameter is missed');
             }
         });
-
-        /**
-         * Set main handlers
-         */
-        root.svg = $('#map_' + options.id).get(0);
-        root.toolTip = $('#tooltip_' + options.id).get(0);
-        root.tools = $('#tools_' + options.id).get(0);
-
-        /**
-         * The data provider type
-         */
+        root.svg = $('#' + options.svgId).get(0);
         root.type = options.type;
 
-        /**
-         * Show tooltip
-         */
+        toolTipOptions = options.toolTipOptions;
+        toolTip = $('#' + toolTipOptions.id);
+
+        root.toolTip = toolTip.get(0);
+
         if (options.showTip === false) {
             root.showTip = false;
         } else {
             root.showTip = true;
         }
 
-        /**
-         * Show tools panel
-         */
-        if (options.showTools === false) {
-            root.showTools = false;
-        } else {
-            root.showTools = true;
-        }
-
-        /**
-         * Check for event handlers
-         */
         ['onClick', 'onOver', 'onOut'].forEach(function (param) {
             if (typeof options[param] === 'function') {
                 root[param] = options[param];
@@ -96,18 +60,6 @@ var SvgMap = function (options) {
             }).then(function (data) {
                 json = data;
             });
-        }
-
-        /**
-         * Set up tools panel
-         */
-        if (root.showTools) {
-            root.tools.style.visibility = 'visible';
-
-            var tools = root.tools.getElementsByTagName('div');
-            tools[0].addEventListener('click', zoomIn);
-            tools[1].addEventListener('click', zoomReset);
-            tools[2].addEventListener('click', zoomOut);
         }
 
         if (validateJson(json)) {
@@ -137,136 +89,23 @@ var SvgMap = function (options) {
             $.each(value, function (key, value) {
                 path.setAttributeNS(null, key, value);
             });
-            path.addEventListener("mouseover", mouseOver);
             path.addEventListener("mousemove", mouseMove);
+            path.addEventListener("mouseover", mouseOver);
             path.addEventListener("mouseout", mouseOut);
-            path.addEventListener("mousedown", mouseDown);
-            path.addEventListener("mouseup", mouseUp);
+            path.addEventListener('click', mouseClick);
             svg.appendChild(path);
         });
-        if (root.showTools) {
-            svg.addEventListener("wheel", mouseWheel);
-        }
-
         adaptViewBox(svg);
     };
 
-    var mouseDown = function (e) {
-        root.state = STATE_CLICK;
-    }
-
-    var mouseUp = function () {
-        if (root.state == STATE_CLICK) {
-            if (root.onClick) {
-                root.onClick($(this));
-            }
-        }
-
-        root.state = STATE_INITIAL;
-        root.toolTip.style.visibility = 'visible';
-    }
-
     var mouseMove = function (e) {
-        switch(root.state) {
-            case STATE_INITIAL:
-                root.toolTip.style.left = e.offsetX + 'px';
-                root.toolTip.style.bottom = e.offsetY + 'px';
-                break;
-            case STATE_CLICK:
-                root.state = STATE_DRAG;
-            case STATE_DRAG:
-                root.toolTip.style.visibility = 'hidden';
+        var pos = this.getBoundingClientRect();
 
-                /*
-                 * TODO: svg move speed = cursor speed. Why do I need 15 coefficient
-                 */
-                if (root.showTools) {
-                    var box = root.box;
-                    box.x = box.x - e.movementX * 15;
-                    box.y = box.y + e.movementY * 15;
-                    root.svg.setAttribute('viewBox', box.x + ' ' + box.y + ' ' + box.width + ' ' + box.height);
-                }
-                break;
-        }
+        var left = pos.left - toolTipOptions.position.x;
+        var top = pos.top - toolTipOptions.position.y;
+
+        toolTip.css({display: 'block', left: left + 'px', top: top + 'px'});
     };
-
-    var zoomIn = function () {
-        var box = root.box;
-        var dS = (box.width + box.height)/2 * 0.05;
-        box.x = box.x + dS;
-        box.width = box.width - dS  * 2;
-        box.y = box.y + dS;
-        box.height = box.height - dS * 2;
-        if (box.width < 0) {
-            return false;
-        }
-        if (box.height < 0) {
-            return false;
-        }
-        root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-    };
-
-    var zoomReset = function () {
-        adaptViewBox(root.svg);
-    };
-
-    var zoomOut = function () {
-        var box = root.box;
-        var dS = (box.width + box.height)/2 * 0.05;
-        box.x = box.x - dS;
-        box.width = box.width + dS * 2;
-        box.y = box.y - dS;
-        box.height = box.height + dS * 2;
-        if (box.width < 0) {
-            return false;
-        }
-        if (box.height < 0) {
-            return false;
-        }
-        root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-    };
-
-    var mouseWheel = function (e) {
-        e.preventDefault();
-
-        // TODO: is box an alias to root.box?
-        var box = root.box;
-        var parentDivBox = root.svg.parentNode.getBoundingClientRect();
-        var xShift = 0;
-        var уShift = 0;
-        var dS = (box.width + box.height)/2 * 0.05;
-
-        if (parentDivBox.width/2 > e.layerX) {
-            xShift = -1 * dS;
-        } else {
-            xShift = 1 * dS;
-        }
-
-        if (parentDivBox.height/2 > e.layerY) {
-            yShift = 1 * dS;
-        } else {
-            yShift = -1 * dS;
-        }
-
-        if (e.deltaY > 0) {
-            box.x = box.x + dS + xShift;
-            box.width = box.width - dS  * 2;
-            box.y = box.y + dS + yShift;
-            box.height = box.height - dS * 2;
-        } else {
-            box.x = box.x - dS - xShift;
-            box.width = box.width + dS * 2;
-            box.y = box.y - dS - yShift;
-            box.height = box.height + dS * 2;
-        }
-        if (box.width < 0) {
-            return false;
-        }
-        if (box.height < 0) {
-            return false;
-        }
-        root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-    }
 
     var mouseOver = function (e) {
         if (root.showTip) {
@@ -295,6 +134,12 @@ var SvgMap = function (options) {
         }
     };
 
+    var mouseClick = function () {
+        if (root.onClick) {
+            root.onClick($(this));
+        }
+    };
+
     var createToolTipContext = function (path) {
         if (typeof path.attr('title') === 'undefined') {
             return false;
@@ -309,17 +154,11 @@ var SvgMap = function (options) {
     var adaptViewBox = function (svg) {
         root.box = svg.getBBox();
 
-        // TODO: why svg is turned upside down?!
-        svg.setAttribute('transform', 'scale(1, -1)');
-
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
-        root.state = STATE_INITIAL;
     };
 
     /*
      * Pass options when class instantiated
      */
     this.construct(options);
-
 };
-
