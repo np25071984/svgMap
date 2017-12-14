@@ -2,14 +2,15 @@
 
 use yii\web\JsExpression;
 
-/* @var $id string */
-/* @var $type int */
-/* @var $data mixed */
-/* @var $showTip bool */
-/* @var $onClick string */
-/* @var $onOver string */
-/* @var $onOut string */
-
+/**
+ * @var $id string
+ * @var $type int
+ * @var $data mixed
+ * @var $showTip bool
+ * @var $onClick string
+ * @var $onOver string
+ * @var $onOut string
+ */
 $this->registerJs(new JsExpression("
     new SvgMap({
         id : '{$id}',
@@ -24,11 +25,11 @@ $this->registerJs(new JsExpression("
 ?>
 
 <div class="svg_map">
-    <div id="tools" style="z-index: 1;">
-        <div><i class="fa fa-plus-circle" aria-hidden="true"></i>[+]</div>
-        <div><i class="fa fa-plus-circle" aria-hidden="true">[0]</i></div>
-        <div><i class="fa fa-minus-circle" aria-hidden="true">[-]</i></div>
+    <div id="tooltip_<?= $id ?>" class="tooltip"></div>
+    <svg id="mapSVG_<?= $id ?>" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" />
+    <div class="tools">
+        <div><i class="glyphicon glyphicon-zoom-in"></i></div>
+        <div><i class="glyphicon glyphicon-fullscreen"></i></div>
+        <div><i class="glyphicon glyphicon-zoom-out"></i></div>
     </div>
-    <div id="tooltip<?= $id ?>"></div>
-    <svg id="mapSVG<?= $id ?>" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" />
 </div>

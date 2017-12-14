@@ -6,7 +6,7 @@ var SvgMap = function (options) {
 
     var svg;
     var type;
-    var toolTip = true;
+    var toolTip;
 
     var showTip;
 
@@ -33,9 +33,9 @@ var SvgMap = function (options) {
             }
         });
 
-        root.svg = $('#mapSVG' + options.id).get(0);
+        root.svg = $('#mapSVG_' + options.id).get(0);
         root.type = options.type;
-        root.toolTip = $('#tooltip' + options.id).get(0);
+        root.toolTip = $('#tooltip_' + options.id).get(0);
 
         if (options.showTip === false) {
             root.showTip = false;
@@ -61,7 +61,6 @@ var SvgMap = function (options) {
             });
         }
 
-        root.state = STATE_INITIAL;
         if (validateJson(json)) {
             draw(root.svg, json);
         }
@@ -94,14 +93,13 @@ var SvgMap = function (options) {
             path.addEventListener("mouseout", mouseOut);
             path.addEventListener("mousedown", mouseDown);
             path.addEventListener("mouseup", mouseUp);
-            // path.addEventListener('click', mouseClick);
             svg.appendChild(path);
         });
         svg.addEventListener("wheel", mouseWheel);
 
-        $('DIV#tools > DIV').get(0).addEventListener('click', zoomIn);
-        $('DIV#tools > DIV').get(1).addEventListener('click', zoomReset);
-        $('DIV#tools > DIV').get(2).addEventListener('click', zoomOut);
+        $('.tools > DIV').get(0).addEventListener('click', zoomIn);
+        $('.tools > DIV').get(1).addEventListener('click', zoomReset);
+        $('.tools > DIV').get(2).addEventListener('click', zoomOut);
 
         adaptViewBox(svg);
     };
@@ -264,6 +262,7 @@ var SvgMap = function (options) {
         svg.setAttribute('transform', 'scale(1, -1)');
 
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
+        root.state = STATE_INITIAL;
     };
 
     /*
