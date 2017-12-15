@@ -168,8 +168,8 @@ var SvgMap = function (options) {
 
     var drawTooltip = function (e, path) {
         if (root.showTip) {
-            root.toolTip.style.left = e.offsetX + 'px';
-            root.toolTip.style.top = e.offsetY + 'px';
+            root.toolTip.style.left = e.layerX + 'px';
+            root.toolTip.style.top = e.layerY + 'px';
             root.toolTip.style.opacity = ".9";
             root.toolTip.style.visibility = "visible";
             root.toolTip.style.transition = "opacity 0.3s linear";
@@ -179,7 +179,7 @@ var SvgMap = function (options) {
             }
             root.toolTip.innerHTML = toolText;
         }
-    }
+    };
 
     var mouseMove = function (e) {
         if (root.state == STATE_INITIAL) {
