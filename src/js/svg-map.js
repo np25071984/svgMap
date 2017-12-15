@@ -310,7 +310,7 @@ var SvgMap = function (options) {
         root.box = svg.getBBox();
 
         // TODO: why svg is turned upside down?!
-        svg.setAttribute('transform', 'scale(1, -1)');
+        //svg.setAttribute('transform', 'scale(1, -1)');
 
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
         root.state = STATE_INITIAL;
