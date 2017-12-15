@@ -6,7 +6,11 @@
 Yii2-виджет для генерации svg по заданному источнику данных.
 
 ## Установка
-Добавляем в composer.json
+Выполняем команду
+```
+php composer.phar require hopper/svg-map "*"
+```
+это добавит в composer.json
 ```json
 {
     "require": {
@@ -24,7 +28,9 @@ use ghopper\svgmap\SvgMapWidget;
 
 ### В контроллере получаем данные для построения svg (в данном случае из примера) и передаем в шаблон
 ```php
-$states = include Yii::getAlias('@ghopper/svgmap/example') . "/russia.php";
+$file = Yii::getAlias('@ghopper/svgmap/example') . "/russia.json";
+$data = file_get_contents($file);
+$states = json_decode($data);
 ...
 $this->render('index', ['svgData' => $states]);
 ```
