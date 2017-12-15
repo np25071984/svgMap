@@ -153,7 +153,7 @@ var SvgMap = function (options) {
 
     var mouseDown = function (e) {
         root.state = STATE_CLICK;
-    }
+    };
 
     var mouseUp = function () {
         if (root.state == STATE_CLICK) {
@@ -164,13 +164,14 @@ var SvgMap = function (options) {
 
         root.state = STATE_INITIAL;
         root.toolTip.style.visibility = 'visible';
-    }
+    };
 
     var mouseMove = function (e) {
+        var pos = this.getBoundingClientRect();
         switch(root.state) {
             case STATE_INITIAL:
-                root.toolTip.style.left = e.offsetX + 'px';
-                root.toolTip.style.bottom = e.offsetY + 'px';
+                root.toolTip.style.left = pos.left - 80 + 'px';
+                root.toolTip.style.top = pos.top - 120 + 'px';
                 break;
             case STATE_CLICK:
                 root.state = STATE_DRAG;
@@ -266,7 +267,7 @@ var SvgMap = function (options) {
             return false;
         }
         root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-    }
+    };
 
     var mouseOver = function (e) {
         if (root.showTip) {
