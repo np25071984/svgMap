@@ -137,7 +137,6 @@ var SvgMap = function (options) {
             $.each(value, function (key, value) {
                 path.setAttributeNS(null, key, value);
             });
-            path.addEventListener("mouseover", mouseOver);
             path.addEventListener("mousemove", mouseMove);
             path.addEventListener("mouseout", mouseOut);
             path.addEventListener("mousedown", mouseDown);
@@ -155,7 +154,7 @@ var SvgMap = function (options) {
         root.state = STATE_CLICK;
     };
 
-    var mouseUp = function () {
+    var mouseUp = function (e) {
         if (root.state == STATE_CLICK) {
             if (root.onClick) {
                 root.onClick($(this));
@@ -163,30 +162,49 @@ var SvgMap = function (options) {
         }
 
         root.state = STATE_INITIAL;
-        root.toolTip.style.visibility = 'visible';
+        drawTooltip(e, $(this));
+
     };
 
-    var mouseMove = function (e) {
-        switch(root.state) {
-            case STATE_INITIAL:
-                root.toolTip.style.left = e.offsetX + 'px';
-                root.toolTip.style.bottom = e.offsetY + 'px';
-                break;
-            case STATE_CLICK:
-                root.state = STATE_DRAG;
-            case STATE_DRAG:
-                root.toolTip.style.visibility = 'hidden';
+    var drawTooltip = function (e, path) {
+        if (root.showTip) {
+            root.toolTip.style.left = e.offsetX + 'px';
+            root.toolTip.style.top = e.offsetY + 'px';
+            root.toolTip.style.opacity = ".9";
+            root.toolTip.style.visibility = "visible";
+            root.toolTip.style.transition = "opacity 0.3s linear";
+            var toolText = createToolTipContext(path);
+            if (!toolText) {
+                toolText = "'title' isn't defined for this path";
+            }
+            root.toolTip.innerHTML = toolText;
+        }
+    }
 
-                /*
-                 * TODO: svg move speed = cursor speed. Why do I need 15 coefficient
-                 */
-                if (root.showTools) {
-                    var box = root.box;
-                    box.x = box.x - e.movementX * 15;
-                    box.y = box.y + e.movementY * 15;
-                    root.svg.setAttribute('viewBox', box.x + ' ' + box.y + ' ' + box.width + ' ' + box.height);
-                }
-                break;
+    var mouseMove = function (e) {
+        if (root.state == STATE_INITIAL) {
+            /*
+             * Don't redraw tooltip during cursor moving
+             */
+            if (root.toolTip.style.visibility != 'visible') {
+                drawTooltip(e, $(this));
+            }
+            if (root.onOver) {
+                root.onOver($(this));
+            }
+        } else if (root.state == STATE_CLICK) {
+            root.state = STATE_DRAG;
+        }
+
+        if (root.state == STATE_DRAG) {
+            root.toolTip.style.visibility = 'hidden';
+
+            if (root.showTools) {
+                var box = root.box;
+                box.x = box.x - e.movementX;
+                box.y = box.y - e.movementY;
+                root.svg.setAttribute('viewBox', box.x + ' ' + box.y + ' ' + box.width + ' ' + box.height);
+            }
         }
     };
 
@@ -268,22 +286,6 @@ var SvgMap = function (options) {
         root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
     };
 
-    var mouseOver = function (e) {
-        if (root.showTip) {
-            root.toolTip.style.visibility = "visible";
-            root.toolTip.style.opacity = ".9";
-            root.toolTip.style.transition = "opacity 0.3s linear";
-            var toolText = createToolTipContext($(this));
-            if (!toolText) {
-                toolText = "'title' isn't defined for this path";
-            }
-            root.toolTip.innerHTML = toolText;
-        }
-        if (root.onOver) {
-            root.onOver($(this));
-        }
-    };
-
     var mouseOut = function () {
         if (root.showTip) {
             root.toolTip.style.visibility = "hidden";
@@ -309,9 +311,6 @@ var SvgMap = function (options) {
     var adaptViewBox = function (svg) {
         root.box = svg.getBBox();
 
-        // TODO: Seems like there are turned over data in russia.php
-        svg.setAttribute('transform', 'scale(1, -1)');
-        
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
         root.state = STATE_INITIAL;
     };

@@ -60,7 +60,7 @@ class SvgMapWidget extends Widget
          * Hide tools by default
          */
         if (!isset($this->showTools)) {
-            $this->showTools = false;
+            $this->showTools = true;
         }
     }
 
