@@ -153,7 +153,7 @@ var SvgMap = function (options) {
 
     var mouseDown = function (e) {
         root.state = STATE_CLICK;
-    }
+    };
 
     var mouseUp = function () {
         if (root.state == STATE_CLICK) {
@@ -164,7 +164,7 @@ var SvgMap = function (options) {
 
         root.state = STATE_INITIAL;
         root.toolTip.style.visibility = 'visible';
-    }
+    };
 
     var mouseMove = function (e) {
         switch(root.state) {
@@ -266,7 +266,7 @@ var SvgMap = function (options) {
             return false;
         }
         root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
-    }
+    };
 
     var mouseOver = function (e) {
         if (root.showTip) {
@@ -309,9 +309,9 @@ var SvgMap = function (options) {
     var adaptViewBox = function (svg) {
         root.box = svg.getBBox();
 
-        // TODO: why svg is turned upside down?!
+        // TODO: Seems like there are turned over data in russia.php
         svg.setAttribute('transform', 'scale(1, -1)');
-
+        
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
         root.state = STATE_INITIAL;
     };
