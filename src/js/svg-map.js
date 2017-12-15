@@ -309,6 +309,9 @@ var SvgMap = function (options) {
     var adaptViewBox = function (svg) {
         root.box = svg.getBBox();
 
+        // TODO: Seems like there are turned over data in russia.php
+        svg.setAttribute('transform', 'scale(1, -1)');
+        
         svg.setAttribute('viewBox', root.box.x + ' ' + root.box.y + ' ' + root.box.width + ' ' + root.box.height);
         root.state = STATE_INITIAL;
     };
