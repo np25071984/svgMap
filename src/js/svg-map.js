@@ -24,7 +24,7 @@ var SvgMap = function (options) {
      * Event handlers
      */
     var onClick;
-    var onOver;
+    var onHover;
     var onOut;
 
     var box;
@@ -80,7 +80,7 @@ var SvgMap = function (options) {
         /**
          * Check for event handlers
          */
-        ['onClick', 'onOver', 'onOut'].forEach(function (param) {
+        ['onClick', 'onHover', 'onOut'].forEach(function (param) {
             if (typeof options[param] === 'function') {
                 root[param] = options[param];
             }
@@ -110,6 +110,12 @@ var SvgMap = function (options) {
             tools[2].addEventListener('click', zoomOut);
         }
 
+        root.svg.addEventListener("mousemove", svgMouseMove);
+        root.svg.addEventListener("mouseout", svgMouseOut);
+        root.svg.addEventListener("mousedown", svgMouseDown);
+        root.svg.addEventListener("mouseup", svgMouseUp);
+
+
         if (validateJson(json)) {
             draw(root.svg, json);
         }
@@ -128,19 +134,18 @@ var SvgMap = function (options) {
         return false;
     };
 
-    /*
+    /**
      * Draws the paths from array
      */
     var draw = function (svg, data) {
         $.each(data, function (index, value) {
             var path = document.createElementNS('http://www.w3.org/2000/svg', "path");
+            path.addEventListener("mousemove", pathMouseMove);
+            path.addEventListener("mouseout", pathMouseOut);
+            path.addEventListener("mouseup", pathMouseUp);
             $.each(value, function (key, value) {
                 path.setAttributeNS(null, key, value);
             });
-            path.addEventListener("mousemove", mouseMove);
-            path.addEventListener("mouseout", mouseOut);
-            path.addEventListener("mousedown", mouseDown);
-            path.addEventListener("mouseup", mouseUp);
             svg.appendChild(path);
         });
         if (root.showTools) {
@@ -150,11 +155,11 @@ var SvgMap = function (options) {
         adaptViewBox(svg);
     };
 
-    var mouseDown = function (e) {
+    var svgMouseDown = function (e) {
         root.state = STATE_CLICK;
     };
 
-    var mouseUp = function (e) {
+    var pathMouseUp = function (e) {
         if (root.state == STATE_CLICK) {
             if (root.onClick) {
                 root.onClick($(this));
@@ -163,7 +168,10 @@ var SvgMap = function (options) {
 
         root.state = STATE_INITIAL;
         drawTooltip(e, $(this));
+    };
 
+    var svgMouseUp = function (e) {
+        root.state = STATE_INITIAL;
     };
 
     var drawTooltip = function (e, path) {
@@ -181,18 +189,22 @@ var SvgMap = function (options) {
         }
     };
 
-    var mouseMove = function (e) {
+    var pathMouseMove = function (e) {
         if (root.state == STATE_INITIAL) {
-            /*
+            /**
              * Don't redraw tooltip during cursor moving
              */
             if (root.toolTip.style.visibility != 'visible') {
                 drawTooltip(e, $(this));
             }
-            if (root.onOver) {
-                root.onOver($(this));
+            if (root.onHover) {
+                root.onHover($(this));
             }
-        } else if (root.state == STATE_CLICK) {
+        }
+    };
+
+    var svgMouseMove = function (e) {
+        if (root.state == STATE_CLICK) {
             root.state = STATE_DRAG;
         }
 
@@ -286,7 +298,7 @@ var SvgMap = function (options) {
         root.svg.setAttribute('viewBox', box.x+' '+box.y+' '+box.width+' '+box.height);
     };
 
-    var mouseOut = function () {
+    var pathMouseOut = function () {
         if (root.showTip) {
             root.toolTip.style.visibility = "hidden";
             root.toolTip.style.opacity = "0";
@@ -294,6 +306,12 @@ var SvgMap = function (options) {
         }
         if (root.onOut) {
             root.onOut($(this));
+        }
+    };
+
+    var svgMouseOut = function (e) {
+        if (!['svg','path'].includes(e.toElement.tagName)) {
+            root.state = STATE_INITIAL;
         }
     };
 
@@ -305,7 +323,7 @@ var SvgMap = function (options) {
         }
     };
 
-    /*
+    /**
      * Adapts dimension of SVG according it paths
      */
     var adaptViewBox = function (svg) {
@@ -315,7 +333,7 @@ var SvgMap = function (options) {
         root.state = STATE_INITIAL;
     };
 
-    /*
+    /**
      * Pass options when class instantiated
      */
     this.construct(options);
